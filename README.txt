@@ -3,7 +3,7 @@ fresher
 
 follow publishing notice websites,  receive the info at the first time on mobile phone client.
 
-famirily product, 速推, 狠狠推, 追信
+family product, 速推, 狠狠推, 追信
 
 
 chrome extension function:
