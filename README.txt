@@ -1,9 +1,10 @@
 fresher
 =======
 
-follow publishing notice websites,  receive the info at the first time on mobile phone client.
+task of fresher:
+follow publishing notice websites on chrome browser,  receive the info at the first time on mobile phone client.
 
-family product, 速推, 狠狠推, 追信
+familiar product, 速推, 狠狠推, 追信
 
 
 chrome extension function:
@@ -30,6 +31,7 @@ mobile phone client or chrome client:
 implemented method:
     android client: google cloud message        https://developer.android.com/google/gcm/index.html
     ios client:  Local and Push Notifications   https://developer.apple.com/notifications/
+
 
 server function:
     watch the website address added by user
