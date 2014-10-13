@@ -1,0 +1,30 @@
+
+------------------------
+Basic Function Problem
+------------------------
+
+Problem1:
+    How server send notification to mobile phone? consider Android device first
+Material:
+    google cloud message: https://developer.android.com/google/gcm/index.html
+
+Problem2:
+    How to watch the notice websites?
+
+
+Problem3:
+    How to get the newest notice when watch the notice websites?
+
+
+
+
+--------------------
+Performance Problem
+--------------------
+
+Problem4:
+    How to watch large amount of websites?
+
+
+Problem5:
+    How to handle large scale of notifications to user?
