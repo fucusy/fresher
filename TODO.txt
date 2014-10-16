@@ -1,0 +1,22 @@
+Task 1:
+    create tables,
+        user table: user id, register date, user email
+        website table: website id, website address, website domain name
+        user to website table: user id, website id, follow date
+
+        push table: user id, website id, title, content, content url, date, is pushed
+        website history: website id, content, date
+
+
+
+Task 2:
+    watch website:
+        every several second watch the website in website table and compare to
+        web page to history page in website history.
+        if any new notice detected, insert records into push table if any users
+        follow the website address.
+
+    notice user:
+        every several second read the push table for any have not pushed notice,
+        push it(Way 1:mail to user; Way 2:push to user Android or iOS device  )
+        , and remark this record is pushed.
