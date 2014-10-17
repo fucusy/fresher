@@ -1,38 +1,45 @@
 from fresher.server.models import user
 
 __author__ = 'user'
-import MySQLdb
+
 import smtplib
-
+import base
 from email.mime.text import MIMEText
-
 from ..config import config
 
 
-class Push:
+
+class Push(base.Base):
 
     push_id = ''
     user_id = ''
     title = ''
     content = ''
     date = ''
-    is_pushed = ''
+    is_pushed = 0
     website_id = ''
     content_url = ''
-
-    connection = ''
-    cursor = ''
-
-    def __init__(self):
-        self.connection = MySQLdb.connect(config.host, config.user, config.password \
-                                          , config.db, charset = config.charset)
-        self.cursor = self.connection.cursor()
 
 
 
     def version(self):
         self.cursor.execute("SELECT VERSION()")
         return self.cursor.fetchone()
+
+    def insert(self):
+        query = "insert into `push`(`user_id`,`title`,`content`,`date`,`is_pushed`" \
+                " ,`website_id`, `content_url` )" \
+                " values (%d, '%s','%s','%s', %d, %d, '%s' ) " %(self.user_id,
+                self.title, self.content, self.date, self.is_pushed, self.website_id
+                ,self.content_url
+                )
+
+        self.cursor.execute(query)
+        try:
+            self.connection.commit()
+        except:
+            self.connection.rollback()
+            print "fail to insert data into push"
 
     def set_pushed(self):
         if( self.push_id is None ):

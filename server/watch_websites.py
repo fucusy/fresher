@@ -1,5 +1,13 @@
 __author__ = 'user'
 
-search_request = urllib2.Request( searchUrl, search_data )
-search_response = urllib2.urlopen( search_request )
-print search_response.read()
+from models.website import *
+
+start = 0
+count = 100
+website_list = Website().get_records(start, count)
+while website_list:
+    for site in website_list:
+        if site.is_different():
+            site.insert_push()
+    start += count
+    website_list = Website().get_records(start, count)
