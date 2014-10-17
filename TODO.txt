@@ -21,3 +21,15 @@ Task 2:
         every several second read the push table for any have not pushed notice,
         push it(Way 1:mail to user; Way 2:push to user Android or iOS device  )
         , and remark this record is pushed.
+
+
+Task 2 finished at 2014.10.17 16:47
+
+
+Task 3:
+    chrome extension: allow user follow website
+
+Task 4:
+    extract the published notice out, straightly mail it to user
+    if can not extract notice out in a grace way, tell user to scan
+    the web page directly
