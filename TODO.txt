@@ -1,13 +1,14 @@
 Task 1:
     create tables,
         user table: user id, register date, user email
-        website table: website id, website address, website domain name
+        website table: website id, website address
         user to website table: user id, website id, follow date
 
         push table: user id, website id, title, content, content url, date, is pushed
         website history: website id, content, date
 
 
+Task 1 finished at 2014.10.16 18:28
 
 Task 2:
     watch website:
