@@ -1,6 +1,7 @@
+from fresher.server.models import push
+
 __author__ = 'user'
 
-import push
 p = push.Push()
 need_pushes = p.get_pushes(0,100)
 for need_push in need_pushes:

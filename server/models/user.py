@@ -1,6 +1,6 @@
 __author__ = 'user'
 
-import config
+from ..config import config
 import MySQLdb
 
 class User:

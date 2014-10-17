@@ -1,11 +1,14 @@
+from fresher.server.models import user
+
 __author__ = 'user'
 import MySQLdb
 import smtplib
 
 from email.mime.text import MIMEText
 
-import config
-import user
+from ..config import config
+
+
 class Push:
 
     push_id = ''
