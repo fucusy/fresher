@@ -33,3 +33,9 @@ Task 4:
     extract the published notice out, straightly mail it to user
     if can not extract notice out in a grace way, tell user to scan
     the web page directly
+
+Task 5:
+    Android client app
+
+Task 6:
+    How to watch large scale website

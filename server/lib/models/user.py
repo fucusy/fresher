@@ -1,8 +1,7 @@
+import base
+
 __author__ = 'user'
 
-from ..config import config
-
-import base
 
 class User(base.Base):
     user_id = ''

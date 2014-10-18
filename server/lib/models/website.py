@@ -1,19 +1,20 @@
+import push, base, user_website
+
+
 __author__ = 'user'
 
-from ..config import config
 import urllib2
-import base
-import user_website
-import push
+import MySQLdb
 
 class Website(base.Base):
     website_id = ""
     website_addr = ""
-
+    now_page = None
 
     def get_records(self,offset, rows):
         records_list = []
-        query = "select `website_id`, `website_addr` " \
+        query = "SELECT `website_id`, `website_address` " \
+                " FROM `website` "\
                 " LIMIT %d,%d" % (offset, rows);
         self.cursor.execute(query)
 
@@ -46,23 +47,27 @@ class Website(base.Base):
     def insert_history(self, history, date):
         if self.website_id is None:
             return None
-
         query = "insert into `website_history`(`website_id`,`content`,`date`)" \
                 " values ( %d, '%s', '%s' )" % (self.website_id, history, date)
         try:
             self.cursor.execute(query)
             self.connection.commit()
-        except:
-            print "fail to insert"
+        except MySQLdb.Error, e:
+            print "fail to insert the history"
+            print "Error %d: %s" % (e.args[0],e.args[1])
             self.connection.rollback()
-
 
     """Return now page content
     """
     def get_now_page(self):
-        search_request = urllib2.Request( self.website_addr )
-        search_response = urllib2.urlopen( search_request )
-        return search_response.read()
+        if not self.now_page:
+            search_request = urllib2.Request( self.website_addr )
+            search_response = urllib2.urlopen( search_request )
+            page = search_response.read()
+            for i in range(0,10):
+                page  = page.replace( str(i),"")
+            self.now_page = page.replace("'","\\'")
+        return self.now_page
 
     """Return whether any change
     """
@@ -72,13 +77,14 @@ class Website(base.Base):
     """Insert data into push table
     """
     def insert_push(self):
-        userids = user_website.UserWebsite.get_user_ids_by_website_id(self.website_id)
+        uw = user_website.UserWebsite()
+        userids = uw.get_user_ids_by_website_id(self.website_id)
         for id in userids:
             p = push.Push()
             p.website_id = self.website_id
             p.user_id = id
             p.title = self.website_addr
-            p.content = self.get_history()
+            p.content = self.website_addr
             p.date = "2014-10-17"
             p.website_id = self.website_id
             p.content_url = ""

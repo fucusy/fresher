@@ -1,4 +1,4 @@
-from fresher.server.models import push
+from lib.models import push
 
 __author__ = 'user'
 

@@ -1,8 +1,9 @@
 __author__ = 'user'
-from ..config import config
-import MySQLdb
-class Base:
 
+import MySQLdb
+from ..config import config
+
+class Base:
     connection = ''
     cursor = ''
 

@@ -1,9 +1,9 @@
-from fresher.server.models import user
+import user
+import base
 
 __author__ = 'user'
 
 import smtplib
-import base
 from email.mime.text import MIMEText
 from ..config import config
 

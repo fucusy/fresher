@@ -1,6 +1,7 @@
+import base
+
 __author__ = 'user'
 
-import base
 
 class UserWebsite(base.Base):
 
