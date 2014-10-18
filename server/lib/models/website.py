@@ -5,11 +5,15 @@ __author__ = 'user'
 
 import urllib2
 import MySQLdb
+from bs4 import BeautifulSoup
+
+
+
 
 class Website(base.Base):
     website_id = ""
     website_addr = ""
-    now_page = None
+    now_page = ""
 
     def get_records(self,offset, rows):
         records_list = []
@@ -33,13 +37,18 @@ class Website(base.Base):
     def get_history(self):
         if self.website_id is None:
             return None
+
         query = "select `content` from `website_history`" \
                 " where `website_id` = %d " \
                 " order by `date` desc" \
                 " limit 1" % self.website_id
 
         self.cursor.execute(query)
-        return self.cursor.fetchone()
+        data = self.cursor.fetchone()
+        history = None
+        if data:
+            history = data[0]
+        return history
 
     """Insert record into website_history table
 
@@ -64,9 +73,13 @@ class Website(base.Base):
             search_request = urllib2.Request( self.website_addr )
             search_response = urllib2.urlopen( search_request )
             page = search_response.read()
-            for i in range(0,10):
-                page  = page.replace( str(i),"")
-            self.now_page = page.replace("'","\\'")
+
+            soup = BeautifulSoup(str(page))
+            for tag in soup.findAll('a', href=True):
+                content = tag.get_text().strip()
+                if len(content) > 0:
+                    content = content + "\n"
+                    self.now_page += content
         return self.now_page
 
     """Return whether any change
