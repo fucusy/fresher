@@ -14,6 +14,16 @@ class Website(base.Base):
     website_id = ""
     website_addr = ""
     now_page = ""
+    def insert(self,addr):
+        query = "INSERT INTO `website`(`website_address`)" \
+                " VALUES ( '%s' )" % (addr)
+        try:
+            self.cursor.execute(query)
+            self.connection.commit()
+        except MySQLdb.Error, e:
+            print "fail to insert the website"
+            print "Error %d: %s" % (e.args[0],e.args[1])
+            self.connection.rollback()
 
     def get_records(self,offset, rows):
         records_list = []
