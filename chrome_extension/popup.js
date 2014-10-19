@@ -2,6 +2,11 @@
 // injected and returned its results
 function onPageDetailsReceived(pageDetails)  {
     document.getElementById('url').value = pageDetails.url;
+    chrome.storage.local.get('email', function(result) {
+        if(result.email != null)
+            document.getElementById('email').value = result.email.replace("%40","@");
+
+    });
 }
 
 // Global reference to the status display SPAN
@@ -13,22 +18,25 @@ function addBookmark() {
     event.preventDefault();
 
     // The URL to POST our data to
-    var postUrl = 'http://127.0.0.1';
-
-    // Set up an asynchronous AJAX POST request
-    var xhr = new XMLHttpRequest();
-    xhr.open('POST', postUrl, true);
-
-
+    var postUrl = 'http://127.0.0.1/index.php?r=follow/create';
     var url = encodeURIComponent(document.getElementById('url').value);
     var email = encodeURIComponent(document.getElementById('email').value);
 
 
-    var params = 'email=' + email +
-        '&url=' + url;
+    chrome.storage.local.set({'email': email}, function() {});
+
+    var params = '&email=' + email +
+        '&website_addr=' + url;
 
     // Replace any instances of the URLEncoded space char with +
     params = params.replace(/%20/g, '+');
+
+    // Set up an asynchronous AJAX POST request
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', postUrl+params, true);
+
+
+
 
     // Set correct header for form data
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
@@ -40,7 +48,16 @@ function addBookmark() {
             statusDisplay.innerHTML = '';
             if (xhr.status == 200) {
                 // If it was a success, close the popup after a short delay
-                statusDisplay.innerHTML = 'Saved!';
+
+
+                var statue;
+                if( xhr.responseText == 1 )
+                    statue = "Successfully Followed";
+                else if(xhr.responseText == 0)
+                    statue = "Already Followed";
+                else
+                    statue = "Encounter Error"
+                statusDisplay.innerHTML = statue;
                 window.setTimeout(window.close, 1000);
             } else {
                 // Show what went wrong

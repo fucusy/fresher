@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Bookmark Extension Example",
-    "description": "POST details of the current page to a remote endpoint.",
+    "name": "Fresher",
+    "description": "follow publishing notice websites on chrome browser,  receive the info at the first time on mobile phone client.",
     "version": "0.2",
     "background": {
         "scripts": ["event.js"],
@@ -12,6 +12,7 @@
     },
     "permissions": [
         "tabs",
+        "storage",
         "http://*/*",
         "https://*/*"
     ]
