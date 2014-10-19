@@ -29,6 +29,8 @@ Task 2 finished at 2014.10.17 16:47
 Task 3:
     chrome extension: allow user follow website
 
+Task 3 finished at 2014.10.19 11:26
+
 Task 4:
     extract the published notice out, straightly mail it to user
     if can not extract notice out in a grace way, tell user to scan
