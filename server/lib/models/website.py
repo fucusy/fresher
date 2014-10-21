@@ -1,12 +1,9 @@
-import push, base, user_website
-
-
 __author__ = 'user'
-
+import push, base, user_website
 import urllib2
 import MySQLdb
 from bs4 import BeautifulSoup
-
+from datetime import datetime
 
 
 
@@ -41,6 +38,13 @@ class Website(base.Base):
                 records_list.append(p)
         return records_list
 
+
+    def has_no_history(self):
+        return self.get_history() == None
+
+    def initialize(self):
+        his  = self.get_now_page()
+        self.insert_history(his, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
     """Return the newest website history
 
     """
@@ -67,7 +71,7 @@ class Website(base.Base):
         if self.website_id is None:
             return None
         query = "insert into `website_history`(`website_id`,`content`,`date`)" \
-                " values ( %d, '%s', '%s' )" % (self.website_id, history, date)
+                " values ( %d, \"%s\", \"%s\" )" % (self.website_id, history, date)
         try:
             self.cursor.execute(query)
             self.connection.commit()
@@ -83,20 +87,63 @@ class Website(base.Base):
             search_request = urllib2.Request( self.website_addr )
             search_response = urllib2.urlopen( search_request )
             page = search_response.read()
-
             soup = BeautifulSoup(str(page))
+
+            content = ""
             for tag in soup.findAll('a', href=True):
                 content = tag.get_text().strip()
                 if len(content) > 0:
-                    content = content + "\n"
+                    content = str(tag).replace("\"","'") + "\n"
                     self.now_page += content
         return self.now_page
 
     """Return whether any change
     """
     def is_different(self):
-        return self.get_now_page() != self.get_history()
+        return self.get_different() != ""
 
+    """Get the difference as content send out
+    """
+    def get_different(self):
+
+        history = self.get_history()
+        if not history:
+            history = ""
+        soup_his = BeautifulSoup(history)
+        his_link_list =  soup_his.find_all('a')
+
+        his_link_dic = {}
+        for link in his_link_list:
+            text = link.get_text().strip()
+            href = link["href"]
+            his_link_dic[text] = href
+
+
+        soup_now = BeautifulSoup(self.get_now_page())
+        now_link_list =  soup_now.find_all('a')
+
+        now_link_dic = {}
+        for link in now_link_list:
+            text = link.get_text().strip()
+            href = link["href"]
+            now_link_dic[text] = href
+
+        differ = []
+        for now_title in now_link_dic.iterkeys():
+            if now_title not in his_link_dic.iterkeys():
+                append = ""
+                append += "<a href='"
+                append += self.website_addr.rstrip('/')
+                append += str(now_link_dic.get(now_title))
+                append += "'>"
+                append += str(now_title)
+                append += "</a>"
+                differ.append( append )
+        differ_content = ""
+        for d in differ:
+            d += "\n"
+            differ_content += d
+        return differ_content
     """Insert data into push table
     """
     def insert_push(self):
@@ -106,9 +153,11 @@ class Website(base.Base):
             p = push.Push()
             p.website_id = self.website_id
             p.user_id = id
-            p.title = self.website_addr
-            p.content = self.website_addr
-            p.date = "2014-10-17"
+            p.title = self.website_addr + " has new notice"
+            content = "the newest notice is :\n"
+            content += self.get_different()
+            p.content = content
+            p.date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             p.website_id = self.website_id
             p.content_url = ""
             p.insert()

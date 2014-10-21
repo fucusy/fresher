@@ -1,6 +1,6 @@
 import user
 import base
-
+import MySQLdb
 __author__ = 'user'
 
 import smtplib
@@ -11,14 +11,14 @@ from ..config import config
 
 class Push(base.Base):
 
-    push_id = ''
-    user_id = ''
-    title = ''
-    content = ''
-    date = ''
+    push_id = ""
+    user_id = ""
+    title = ""
+    content = ""
+    date = ""
     is_pushed = 0
-    website_id = ''
-    content_url = ''
+    website_id = ""
+    content_url = ""
 
 
 
@@ -29,17 +29,18 @@ class Push(base.Base):
     def insert(self):
         query = "insert into `push`(`user_id`,`title`,`content`,`date`,`is_pushed`" \
                 " ,`website_id`, `content_url` )" \
-                " values (%d, '%s','%s','%s', %d, %d, '%s' ) " %(self.user_id,
+                " values (%d, \"%s\",\"%s\",\"%s\", %d, %d, \"%s\" ) " %(self.user_id,
                 self.title, self.content, self.date, self.is_pushed, self.website_id
                 ,self.content_url
                 )
-
         self.cursor.execute(query)
         try:
             self.connection.commit()
-        except:
+        except MySQLdb.Error, e:
+            print "fail to insert the push"
+
+            print "Error %d: %s" % (e.args[0],e.args[1])
             self.connection.rollback()
-            print "fail to insert data into push"
 
     def set_pushed(self):
         if( self.push_id is None ):
