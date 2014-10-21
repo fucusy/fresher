@@ -36,8 +36,13 @@ Task 4:
     if can not extract notice out in a grace way, tell user to scan
     the web page directly
 
+Task 4 finished at 2014.10.21 15:22
+
 Task 5:
     Android client app
 
 Task 6:
+    make the system more robust to handle different notice publish style
+
+The last task:
     How to watch large scale website
