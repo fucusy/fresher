@@ -6,8 +6,10 @@ __author__ = 'user'
 import smtplib
 from email.mime.text import MIMEText
 from ..config import config
+import urllib2
+import urllib
 
-
+from gcm import GCM
 
 class Push(base.Base):
 
@@ -19,7 +21,7 @@ class Push(base.Base):
     is_pushed = 0
     website_id = ""
     content_url = ""
-
+    register_id =""
 
 
     def version(self):
@@ -52,6 +54,33 @@ class Push(base.Base):
         except:
             self.connection.rollback()
             print "fail to set pushed"
+
+
+    def get_register_id(self):
+        if not self.register_id:
+            u = user.User();
+            receiver = u.get_email_addr_by_user_id(self.user_id)
+
+            query = "select `gcm_regid` from `gcm_users` where `email` = '%s'" % receiver
+            try:
+                self.cursor.execute(query)
+                self.register_id = self.cursor.fetchone()
+            except:
+                print "fail to get gcm_regid addr"
+                self.connection.rollback()
+        return self.register_id
+    def notification_android(self):
+        body = self.content
+
+        # Plaintext request
+        reg_id = self.get_register_id()
+        reg_id = str(reg_id)
+        reg_id = reg_id[:-3]
+        reg_id = reg_id[3:]
+        if reg_id:
+            f = { 'regId' : reg_id, 'message' : body}
+            url = "http://127.0.0.1/send_message.php?%s"% urllib.urlencode(f)
+            print urllib2.urlopen(url).read()
 
     def send_mail(self):
         if( self.push_id is None ):
