@@ -136,7 +136,7 @@ class Website(base.Base):
                 append += self.website_addr.rstrip('/')
                 append += str(now_link_dic.get(now_title))
                 append += "'>"
-                append += str(now_title)
+                append += now_title
                 append += "</a>"
                 differ.append( append )
         differ_content = ""
