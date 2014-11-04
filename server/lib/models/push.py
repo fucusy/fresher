@@ -9,8 +9,6 @@ from ..config import config
 import urllib2
 import urllib
 
-from gcm import GCM
-
 class Push(base.Base):
 
     push_id = ""
@@ -44,17 +42,24 @@ class Push(base.Base):
             print "Error %d: %s" % (e.args[0],e.args[1])
             self.connection.rollback()
 
-    def set_pushed(self):
+
+
+    def update_push(self, update):
         if( self.push_id is None ):
             return False
         try:
-            update = "update `push` set `is_pushed` = 1  where `push_id`= %d"%(self.push_id)
+            update = "update `push` %s  where `push_id`= %d"%(update,self.push_id)
             self.cursor.execute(update)
             self.connection.commit()
         except:
             self.connection.rollback()
             print "fail to set pushed"
 
+    def set_android_pushed(self):
+        self.update_push("set `is_push_to_android` = 1")
+
+    def set_pushed(self):
+        self.update_push("set `is_pushed` = 1")
 
     def get_register_id(self):
         if not self.register_id:
@@ -78,7 +83,7 @@ class Push(base.Base):
         reg_id = reg_id[:-3]
         reg_id = reg_id[3:]
         if reg_id:
-            f = { 'regId' : reg_id, 'message' : body}
+            f = { 'regId' : reg_id, 'message' : body.encode('utf-8')}
             url = "http://127.0.0.1/send_message.php?%s"% urllib.urlencode(f)
             print urllib2.urlopen(url).read()
 
@@ -100,13 +105,20 @@ class Push(base.Base):
         s.sendmail(config.mail_sender, receiver, msg.as_string())
         s.quit()
 
-    def get_pushes(self,offset, rows):
+    def get_pushes_to_android(self,offset,rows):
+
+        condition = "`is_push_to_android` = 0" \
+                    " ORDER BY `date` ASC" \
+                    " LIMIT %d,%d" % (offset, rows);
+
+        return self.get_pushed_by_condition(condition)
+
+
+    def get_pushed_by_condition(self, condition):
         push_list = []
         query = "select `push_id`, `user_id`, `title`, `content`, `date`, `website_id`" \
                 ", `content_url`, `content` \
-                FROM  `push` WHERE `is_pushed` = 0" \
-                " ORDER BY `date` ASC" \
-                " LIMIT %d,%d" % (offset, rows);
+                FROM  `push` WHERE %s" % condition
         self.cursor.execute(query)
 
         datas = self.cursor.fetchall()
@@ -123,6 +135,16 @@ class Push(base.Base):
                 p.content = data[7]
                 push_list.append(p)
         return push_list
+
+
+
+    def get_pushes(self,offset, rows):
+
+        condition = "`is_pushed` = 0" \
+                    " ORDER BY `date` ASC" \
+                    " LIMIT %d,%d" % (offset, rows);
+
+        return self.get_pushed_by_condition(condition)
 
     def is_need_push(self):
         query = "select count(*) from push where is_pushed = 0"

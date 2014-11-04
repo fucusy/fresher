@@ -105,7 +105,6 @@ class Website(base.Base):
     """Get the difference as content send out
     """
     def get_different(self):
-
         history = self.get_history()
         if not history:
             history = ""
@@ -153,10 +152,26 @@ class Website(base.Base):
             p = push.Push()
             p.website_id = self.website_id
             p.user_id = id
-            p.title = self.website_addr + " has new notice"
-            content = "the newest notice is :\n"
+            p.title = "has new notice"
+
+            soup_diff = BeautifulSoup(self.get_different())
+
+            new_link_list =  soup_diff.find_all('a')
+
+            new_link_count = len(new_link_list)
+
+            if new_link_count == 1:
+                content = "one notice is published:\n"
+            else:
+                content = str(new_link_count) + " notices are published:\n"
+
             content += self.get_different()
+
+
             p.content = content
+            p.content = p.content.replace('"',"'")
+
+
             p.date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             p.website_id = self.website_id
             p.content_url = ""

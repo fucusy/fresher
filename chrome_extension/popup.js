@@ -18,7 +18,7 @@ function addBookmark() {
     event.preventDefault();
 
     // The URL to POST our data to
-    var postUrl = 'http://127.0.0.1/index.php?r=follow/create';
+    var postUrl = 'http://127.0.0.1:8081/index.php?r=follow/create';
     var url = encodeURIComponent(document.getElementById('url').value);
     var email = encodeURIComponent(document.getElementById('email').value);
 

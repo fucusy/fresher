@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -122,7 +124,8 @@ public class MainActivity extends Activity {
 			 * */
 			
 			// Showing received message
-			lblMessage.append(newMessage + "\n");			
+			lblMessage.append(Html.fromHtml(newMessage + "<br/>"));		
+			lblMessage.setMovementMethod(LinkMovementMethod.getInstance());
 			Toast.makeText(getApplicationContext(), "New Message: " + newMessage, Toast.LENGTH_LONG).show();
 			
 			// Releasing wake lock
