@@ -44,11 +44,17 @@ Task 5:
 Task 5 finished part of it at 2014.10.30.
 
 Task 6:
+    deal the chinese character problem.
+
+Task 6 finished at 2014.11.1
+
+Task 7:
+    make Android client app more customized
+
+Task 7:
     extract main new content and send it to user;
     and make new detect more robust.
 
-Task 7:
-    deal the chinese character problem.
 
 The last task:
     How to watch large scale website
