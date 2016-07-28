@@ -58,3 +58,7 @@ Task 7:
 
 The last task:
     How to watch large scale website
+    
+    
+2016-07-28:
+add watch webpage which need user authentication
